@@ -86,18 +86,23 @@ def get_answer_by_intent(intent):
         return random.choice(phrases)
 
 
-def get_answer_by_action(action, contact):
+def get_answer_by_action(action, question):
     if action in BOT_HANDLERS['actions']:
         phrases = BOT_HANDLERS['actions'][action]['responses']
         print(random.choice(phrases))
         if action == 'show':
             return show_all_func()
         if action == 'phone':
+            contact = question.split(action)[1]
+            contact = contact.lstrip()
             return phone_func(contact)
         if action == 'add':
-            contact = contact
+            contact = question.split(action)[1]
+            contact = contact.lstrip()
             return add_func(contact)
         if action == 'change':
+            contact = question.split(action)[1]
+            contact = contact.lstrip()
             return change_func(contact)
          
 
@@ -135,7 +140,6 @@ def change_func(contact):
     return  f'I have changed contact:{contact}. The previous number was: {previous_number}'
 
 
-@input_error
 def bot(question):
     intent = get_intent(question)
     action = get_action(question)
@@ -145,12 +149,8 @@ def bot(question):
         answer = get_answer_by_intent(intent)
         if answer:
             return answer
-        
-    if action == 'add' or 'change' or 'phone':
-        contact = question.split(action)[1]
-        contact = contact.lstrip()
-               
-    answer = get_answer_by_action(action, contact)
+              
+    answer = get_answer_by_action(action, question)
     if answer:
         return answer
     
