@@ -50,9 +50,9 @@ def input_error(func):
         except KeyError:
             return "No contact with this name"
         except IndexError:
-            input("Enter the name and contact, please: ")
+            return "Enter the name and contact, please: "
         except ValueError:
-            return input("Enter the name and contact, please: ")
+            return "Enter the name and contact, please: "
     return inner_func
 
 
@@ -71,14 +71,12 @@ def get_intent(question):
 
 
 def get_action(question):
-    print(question)
     action_d = ['add', 'change', 'show', 'phone']
     for action, action_data in BOT_HANDLERS['actions'].items():
         for example in action_data['examples']:
             for i in action_d:
                 if filter_text(question).find(filter_text(i)) != -1:
                     action = i
-                    print(action)
                     return action      
     
 
@@ -89,7 +87,6 @@ def get_answer_by_intent(intent):
 
 
 def get_answer_by_action(action, contact):
-    print(action)
     if action in BOT_HANDLERS['actions']:
         phrases = BOT_HANDLERS['actions'][action]['responses']
         print(random.choice(phrases))
@@ -113,43 +110,28 @@ def get_failure_phrase():
 def show_all_func():
     tabl = ''
     for name, phone in CONTACTS.items():
-        tabl += f"{name}:{phone}\n"
+        tabl += f"{name}: {phone}\n"
     return tabl
 
 
 @input_error
 def phone_func(contact):
-    
-    #if question.find('phone ') != -1:
-        #name = question.split('phone ')[1]
-    #print(CONTACTS[name])
-    #else:
-        #name = input("Enter the name: ")
-    return CONTACTS[name.lstrip()]
+    name = contact.split(' ')[0]
+    return f"{name}: {CONTACTS[name]}"
 
 
 @input_error
 def add_func(contact):
-    contact = contact.lstrip()
-    #if question.find('add ') != -1:
-        #contact = question.split('add ')[1]
-    CONTACTS[contact.split(' ')[0]] = contact.split(' ')[1]
-    #else:
-        #contact = input("Enter the name and contact, please: ")
-        #CONTACTS[contact.split(' ')[0]] = contact.split(' ')[1]
+    name, phone = contact.split(' ')
+    CONTACTS[name] = phone
     return  f'I have added {contact} to your contact book'
 
 
 @input_error
 def change_func(contact):
-    contact = contact.lstrip()
-    #if question.find('change ') != -1:
-        #contact = question.split('change ')[1]
-    previous_number = CONTACTS[contact.split(' ')[0]]
-    CONTACTS[contact.split(' ')[0]] = contact.split(' ')[1]
-    #else:
-        #contact = input("Enter the name and contact, please: ")
-    #CONTACTS[contact.split(' ')[0]] = contact.split(' ')[1]
+    name, phone = contact.split(' ')
+    previous_number = CONTACTS[name]
+    CONTACTS[name] = phone
     return  f'I have changed contact:{contact}. The previous number was: {previous_number}'
 
 
@@ -166,7 +148,8 @@ def bot(question):
         
     if action == 'add' or 'change' or 'phone':
         contact = question.split(action)[1]
-       
+        contact = contact.lstrip()
+               
     answer = get_answer_by_action(action, contact)
     if answer:
         return answer
