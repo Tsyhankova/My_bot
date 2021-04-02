@@ -155,8 +155,8 @@ class Birthday(Field):
 
 
 
-"""
 
+"""
 a = AddressBook()
 
 
@@ -165,7 +165,7 @@ c = Record('Ania','48575725505', birthday ='27/02/2012')
 d = Record('Ikar','48575725554', '48111111119', birthday ='07/05/1989')
 e = Record('Tata','48575725500', birthday ='09/07/2000')
 f = Record('Giz','48575720000', birthday =None)
-print(b)
+#print(b)
 
 a.add_record(b)
 a.add_record(c)
@@ -174,7 +174,10 @@ a.add_record(d)
 a.add_record(f)
 
 print(a)
+"""
 
+
+"""
 b.change_phone(1, '48111111111')
 print(b)
 d.change_phone(1, '48555555555')
@@ -204,3 +207,4 @@ It = a.iterator(3)
 
 print(It)
 """
+
